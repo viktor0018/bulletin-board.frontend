@@ -152,7 +152,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/http.js";
+import HTTP from "../config/Http.js";
 
 export default {
   data() {
@@ -163,8 +163,9 @@ export default {
 
   monted() {},
   created() {
+    //localStorage.setItem("access_token", "sss");
     HTTP()
-      .get("/")
+      .get("/user")
       .then((resp) => {
         console.log(resp.data);
       })
