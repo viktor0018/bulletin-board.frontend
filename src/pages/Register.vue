@@ -194,26 +194,23 @@ export default {
           phone_access_time: this.phone_access_time,
         })
         .then((resp) => {
-          localStorage.setItem("access_token", resp.data.access_token);
-          localStorage.setItem(
-            "user_name",
-            resp.data.user.name + " " + resp.data.user.surname
-          );
-          location.href = "/";
-          //this.$router.push({ path: "home" });
+          console.log("resp", resp);
+          localStorage.setItem("access_token", resp.data.data.access_token);
+          localStorage.setItem("user_name", resp.data.data.user_name);
+          //location.href = "/";
+          this.$router.push({ path: "home" });
         })
         .catch((error) => {
-          console.log(error);
-          console.log(error.message);
-          console.log(error.response.data);
-          show_error(
-            this.$notify,
-            error.response.data.message || error.message
-          );
+          console.log("error", error);
+          console.log("error.message", error.message);
+          console.log("error.response.data", error.response.data);
+          console.log(error.response.data.message);
+          show_error(this.$notify, error.response.data.message);
+        })
+        .finally(() => {
           this.loading = false;
           this.$insProgress.finish();
-        })
-        .finally(() => {});
+        });
     },
   },
 };

@@ -144,7 +144,9 @@
             Inbox</b-dropdown-item
           >
 
-          <b-dropdown-item href="javascript:;">Setting</b-dropdown-item>
+          <b-dropdown-item @click="$router.push({ path: '/password_forgot' })"
+            >Change password</b-dropdown-item
+          >
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item @click="$router.push({ path: '/logout' })"
             >Log Out</b-dropdown-item
