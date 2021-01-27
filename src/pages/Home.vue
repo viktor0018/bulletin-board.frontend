@@ -22,37 +22,10 @@
         </div>
       </div>
 
-      <div>
-        <ul class="pagination" style="">
-          <li class="page-item disabled">
-            <a href="javascript:;" class="page-link">«</a>
-          </li>
-          <li class="page-item active">
-            <a href="javascript:;" class="page-link">1</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">2</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">3</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">4</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">5</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">6</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">7</a>
-          </li>
-          <li class="page-item">
-            <a href="javascript:;" class="page-link">»</a>
-          </li>
-        </ul>
-      </div>
+      <pagination
+        :data="advertData"
+        @pagination-change-page="getAdverts"
+      ></pagination>
     </div>
   </div>
 </template>
@@ -66,29 +39,36 @@ export default {
     return {
       value: "",
       adverts: [],
+      // Our data object that holds the Laravel paginator data
+      advertData: {},
     };
   },
 
   monted() {},
   created() {
     console.log("created");
-    HTTP()
-      .get("/adverts")
-      .then((resp) => {
-        console.log(resp.data);
-        this.adverts = resp.data.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {});
+    this.getAdverts();
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
     document.body.className = "";
     next();
   },
-  methods: {},
+  methods: {
+    getAdverts(page = 1) {
+      HTTP()
+        .get("/adverts?page=" + page)
+        .then((resp) => {
+          console.log(resp.data);
+          this.adverts = resp.data.data;
+          this.advertData = resp.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {});
+    },
+  },
 };
 </script>
 
