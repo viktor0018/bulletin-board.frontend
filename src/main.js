@@ -29,6 +29,7 @@ import VueCustomScrollbar from "vue-custom-scrollbar";
 import VueApexCharts from "vue-apexcharts";
 import DateRangePicker from "vue2-daterange-picker";
 import LaravelVuePagination from "laravel-vue-pagination";
+import VueGoodTablePlugin from "vue-good-table";
 
 // plugins css
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -48,6 +49,7 @@ import "vue2-daterange-picker/dist/vue2-daterange-picker.css";
 import "sweetalert2/dist/sweetalert2.min.css";
 import "bootstrap-social/bootstrap-social.css";
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
+import "vue-good-table/dist/vue-good-table.css";
 
 // color admin css
 import "./scss/vue.scss";
@@ -92,6 +94,7 @@ Vue.component("apexchart", VueApexCharts);
 Vue.component("date-range-picker", DateRangePicker);
 Vue.component(VueCountdown.name, VueCountdown);
 Vue.component("pagination", LaravelVuePagination);
+Vue.use(VueGoodTablePlugin);
 
 const router = new VueRouter({
   routes,

@@ -1,31 +1,78 @@
 <template>
   <div class="">
-    <div class="container">
-      <div class="row">
-        <div class="col-xl-4" v-for="(advert, index) in adverts" :key="index">
-          <img
-            class="card-img-top"
-            :src="'https://picsum.photos/id/' + advert.id + '/200/200'"
-            alt="Card image cap"
-          />
-          <div class="card-body">
-            <a href=""
-              ><div class="text-blue f-s-15 f-w-700">
-                {{ advert.title }}
-              </div></a
-            >
-            <div class="text-black f-s-18 f-w-700">{{ advert.price }} ₽</div>
-            <div class="ttext-black-transparent-9 f-s-13 f-w-300">
-              {{ advert.description }}
+    <div class="">
+      <div class="">
+        <vue-good-table
+          :columns="columns"
+          :rows="rows"
+          ref="table-projects"
+          :lineNumbers="false"
+          :search-options="{
+            enabled: true,
+            placeholder: 'Search...',
+          }"
+          :paginationOptions="{
+            enabled: true,
+            nextLabel: 'next',
+            prevLabel: 'prev',
+            rowsPerPageLabel: 'lines',
+            ofLabel: 'of',
+            allLabel: 'All',
+          }"
+          :selectOptions="{
+            enabled: false,
+            selectOnCheckboxOnly: true,
+            selectionInfoClass: '',
+            selectionText: 'rows selected',
+            clearSelectionText: 'Clear',
+          }"
+          :row-style-class="rowStyleFn"
+        >
+          <div slot="emptystate">
+            <div class="text-center">
+              No adverts...
             </div>
           </div>
-        </div>
-      </div>
+          <div slot="table-actions">
+            <button
+              class="btn  btn-info m-r-10"
+              style="height:32px"
+              @click="advertCreate"
+            >
+              <i class="fas fa-plus"></i>
+              Add advert
+            </button>
+          </div>
 
-      <pagination
-        :data="advertData"
-        @pagination-change-page="getAdverts"
-      ></pagination>
+          <template slot="table-row" slot-scope="props">
+            <span v-if="props.column.field == 'id'">
+              <div>
+                <button
+                  @click="advertShow(props.row)"
+                  type="button"
+                  class="btn btn-default btn-sm m-r-10"
+                >
+                  Show
+                </button>
+                <button
+                  @click="advertEdit(props.row)"
+                  type="button"
+                  class="btn btn-default btn-sm m-r-10"
+                >
+                  Edit
+                </button>
+                <button
+                  @click="advertDelete(props.row)"
+                  type="button"
+                  class="btn btn-default btn-sm m-r-10"
+                >
+                  Delete
+                </button>
+              </div>
+            </span>
+          </template>
+        </vue-good-table>
+      </div>
     </div>
   </div>
 </template>
@@ -39,8 +86,32 @@ export default {
     return {
       value: "",
       adverts: [],
+      selectedRow: -1,
       // Our data object that holds the Laravel paginator data
       advertData: {},
+
+      columns: [
+        {
+          label: "Title",
+          field: "title",
+        },
+        {
+          label: "Description",
+          field: "description",
+        },
+        {
+          label: "Status",
+          field: "status.status",
+        },
+        {
+          label: "Action",
+          field: "id",
+          width: "40px",
+          tdClass: "text-center text-nowrap",
+          thClass: "text-center text-nowrap",
+        },
+      ],
+      rows: [],
     };
   },
 
@@ -55,13 +126,44 @@ export default {
     next();
   },
   methods: {
-    getAdverts(page = 1) {
+    rowStyleFn(row) {
+      return row.originalIndex === this.selectedRow
+        ? "bg-blue-transparent-1"
+        : "";
+    },
+
+    advertShow(row) {
+      this.$router.push({ name: "AdvertShow", params: { id: row.id } });
+    },
+
+    advertEdit(row) {
+      this.$router.push({ name: "AdvertEdit", params: { id: row.id } });
+    },
+    advertCreate() {
+      this.$router.push({ name: "AdvertCreate" });
+    },
+    advertDelete(row) {
+      if (window.confirm("Are you sure?")) {
+        HTTP()
+          .post("/advert/destroy?id=" + row.id)
+          .then((resp) => {
+            console.log(resp.data);
+            this.rows = this.rows.filter((r) => r.id != row.id);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally(() => {});
+      }
+    },
+
+    addNew() {},
+    getAdverts() {
       HTTP()
-        .get("/adverts?page=" + page)
+        .get("/myadverts")
         .then((resp) => {
           console.log(resp.data);
-          this.adverts = resp.data.data;
-          this.advertData = resp.data;
+          this.rows = resp.data.data.items;
         })
         .catch((error) => {
           console.log(error);
@@ -73,12 +175,32 @@ export default {
 </script>
 
 <style>
-.pagination {
-  display: flex;
-  justify-content: center;
+.progress-height {
+  margin-top: 2px;
+  height: 18px !important;
 }
 
-.pagination li {
-  display: block;
+.fa-size {
+  font-size: 1.8em;
+}
+
+.selectedRow {
+  background-color: red;
+}
+
+@media (max-width: 767px) {
+  .td-visible {
+    display: none;
+  }
+
+  .td-width {
+    min-width: 80% !important;
+    max-width: 80% !important;
+    width: 80% !important;
+  }
+
+  .mobbtn {
+    width: 100%;
+  }
 }
 </style>

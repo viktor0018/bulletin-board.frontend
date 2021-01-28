@@ -14,8 +14,9 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link to="/dashboard/v2" class="navbar-brand"
-          ><span class="navbar-logo"></span> <b>Color</b> Admin</router-link
+        <router-link to="/" class="navbar-brand"
+          ><span class="navbar-logo"></span>
+          <b>Bulletin </b> &nbsp;board</router-link
         >
         <button
           type="button"
@@ -67,7 +68,7 @@
       <!-- begin header-nav -->
       <ul class="navbar-nav navbar-right">
         <li class="navbar-form">
-          <form name="search_form" v-on:submit="checkForm">
+          <!--<form name="search_form" v-on:submit="checkForm">
             <div class="form-group">
               <input
                 type="text"
@@ -78,7 +79,7 @@
                 <i class="fa fa-search"></i>
               </button>
             </div>
-          </form>
+          </form>-->
         </li>
         <b-nav-item-dropdown
           menu-class="media-list dropdown-menu-right"
@@ -138,11 +139,13 @@
             <span class="d-none d-md-inline">{{ user_name }}</span>
             <b class="caret"></b>
           </template>
-          <b-dropdown-item href="javascript:;">Edit Profile</b-dropdown-item>
-          <b-dropdown-item href="javascript:;"
+          <b-dropdown-item @click="$router.push({ path: '/home' })"
+            >My adverts</b-dropdown-item
+          >
+          <!--<b-dropdown-item href="javascript:;"
             ><span class="badge badge-danger pull-right">0</span>
             Inbox</b-dropdown-item
-          >
+          >-->
 
           <b-dropdown-item @click="$router.push({ path: '/password_forgot' })"
             >Change password</b-dropdown-item
