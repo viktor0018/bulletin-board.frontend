@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row m-b-10">
         <div class="col-md-6 col-centered">
-          <form>
+          <div>
             <div class="form-group row m-b-15">
               <label class="col-sm-3 col-form-label">Region</label>
               <div class="col-sm-9">
@@ -126,20 +126,18 @@
                 </button>
               </div>
             </div>
-          </form>
+          </div>
 
           <div class="form-inline">
             <div class="form-group m-r-10"></div>
             <div class="form-group m-r-10"></div>
             <div class="form-group m-r-10"></div>
-
             <div class="form-group m-r-10"></div>
-
             <div class="form-group m-r-10"></div>
           </div>
         </div>
       </div>
-      <div class="row m-t-20">
+      <div class="row m-t-20" v-if="adverts.length">
         <div
           class="media media"
           v-for="(advert, index) in adverts"
@@ -162,6 +160,9 @@
           </div>
         </div>
       </div>
+      <div class=" m-t-20 text-center" v-else>
+        <h4>Adverts not found</h4>
+      </div>
 
       <pagination
         :data="advertData"
@@ -175,6 +176,8 @@
 <script>
 import PageOptions from "../config/PageOptions.vue";
 import HTTP from "../config/Http.js";
+import { show_error } from "../config/Message";
+import { getList } from "../config/Library";
 
 export default {
   data() {
@@ -198,8 +201,7 @@ export default {
   monted() {},
   created() {
     console.log("created");
-    this.getList();
-    this.searchAdverts();
+    getList(this.$data);
 
     this.category_id = localStorage.category_id;
     this.city_id = localStorage.city_id;
@@ -207,6 +209,7 @@ export default {
     this.price_from = localStorage.price_from;
     this.price_to = localStorage.price_to;
     this.search_text = localStorage.search_text;
+    this.searchAdverts();
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
@@ -248,21 +251,12 @@ export default {
           this.advertData = resp.data.data;
         })
         .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {});
-    },
-    getList() {
-      HTTP()
-        .get("/advert/list")
-        .then((resp) => {
-          console.log(resp.data);
-          this.categories = resp.data.data.categories;
-          this.cities = resp.data.data.cities;
-          this.regions = resp.data.data.regions;
-        })
-        .catch((error) => {
-          console.log(error);
+          console.warn(error.response.data.data.item);
+          console.log(
+            Object.values(error.response.data.data.item.item).join("  ")
+          );
+
+          show_error(this.$notify, error);
         })
         .finally(() => {});
     },

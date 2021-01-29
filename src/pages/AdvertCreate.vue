@@ -94,6 +94,8 @@
 <script>
 import PageOptions from "../config/PageOptions.vue";
 import HTTP from "../config/Http.js";
+import { getList } from "../config/Library";
+import { show_error } from "../config/Message";
 
 export default {
   data() {
@@ -110,8 +112,8 @@ export default {
 
   monted() {},
   created() {
-    console.log("created");
-    this.getList();
+    console.log("created", this.$data);
+    getList(this.$data);
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
@@ -132,24 +134,11 @@ export default {
           console.log(resp.data);
         })
         .catch((error) => {
-          console.log(error);
+          show_error(this.$notify, error);
         })
         .finally(() => {
           this.$router.push({ path: "/home" });
         });
-    },
-    getList() {
-      HTTP()
-        .get("/advert/list")
-        .then((resp) => {
-          console.log(resp.data);
-          this.categories = resp.data.data.categories;
-          this.cities = resp.data.data.cities;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {});
     },
 
     cancel() {
