@@ -1,8 +1,7 @@
-import HTTP from "./Http.js";
+import { HTTP } from "./Http.js";
 
 function getList(data) {
-  HTTP()
-    .get("/advert/list")
+  HTTP.get("/advert/list")
     .then((resp) => {
       console.log(resp.data);
       data.categories = [

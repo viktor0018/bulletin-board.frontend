@@ -79,7 +79,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 
 export default {
   data() {
@@ -144,8 +144,7 @@ export default {
     },
     advertDelete(row) {
       if (window.confirm("Are you sure?")) {
-        HTTP()
-          .post("/advert/destroy?id=" + row.id)
+        HTTP.post("/advert/destroy?id=" + row.id)
           .then((resp) => {
             console.log(resp.data);
             this.rows = this.rows.filter((r) => r.id != row.id);
@@ -159,8 +158,7 @@ export default {
 
     addNew() {},
     getAdverts() {
-      HTTP()
-        .get("/myadverts")
+      HTTP.get("/myadverts")
         .then((resp) => {
           console.log(resp.data);
           this.rows = resp.data.data.items;

@@ -220,7 +220,6 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-//import HTTP from "../config/http.js";
 
 export default {
   data() {

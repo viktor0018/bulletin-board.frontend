@@ -152,7 +152,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 import { show_error } from "../config/Message";
 
 export default {
@@ -183,16 +183,15 @@ export default {
       this.loading = true;
       localStorage.setItem("username", this.username);
       localStorage.setItem("password", this.password);
-      HTTP()
-        .post("/register", {
-          name: this.name,
-          surname: this.surname,
-          middlename: this.middlename,
-          email: this.email,
-          password: this.password,
-          phone: this.phone,
-          phone_access_time: this.phone_access_time,
-        })
+      HTTP.post("/register", {
+        name: this.name,
+        surname: this.surname,
+        middlename: this.middlename,
+        email: this.email,
+        password: this.password,
+        phone: this.phone,
+        phone_access_time: this.phone_access_time,
+      })
         .then((resp) => {
           console.log("resp", resp);
           localStorage.setItem("access_token", resp.data.data.access_token);

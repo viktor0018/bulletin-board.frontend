@@ -52,7 +52,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 import { show_error, show_message } from "../config/Message";
 
 export default {
@@ -78,10 +78,9 @@ export default {
     this.$insProgress.start();
     this.loading = true;
     localStorage.setItem("email", this.email);
-    HTTP()
-      .get(
-        `/verify-email/${id}/${hash}?expires=${expires}&signature=${signature}`
-      )
+    HTTP.get(
+      `/verify-email/${id}/${hash}?expires=${expires}&signature=${signature}`
+    )
       .then((resp) => {
         console.log("resp", resp);
         show_message(this.$notify, resp.data.message);

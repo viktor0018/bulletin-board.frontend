@@ -121,7 +121,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 
 export default {
   data() {
@@ -148,8 +148,7 @@ export default {
   },
   methods: {
     getAdvert() {
-      HTTP()
-        .get("/advert/show?id=" + this.id)
+      HTTP.get("/advert/show?id=" + this.id)
         .then((resp) => {
           console.log(resp);
           resp = resp.data.data.item;

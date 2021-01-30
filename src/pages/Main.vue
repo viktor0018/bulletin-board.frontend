@@ -175,7 +175,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 import { show_error } from "../config/Message";
 import { getList } from "../config/Library";
 
@@ -233,18 +233,17 @@ export default {
       localStorage.setItem("price_from", this.price_from);
       localStorage.setItem("price_to", this.price_to);
       localStorage.setItem("search_text", this.search_text);
-      HTTP()
-        .get("/adverts", {
-          params: {
-            page: page,
-            category_id: this.category_id,
-            city_id: this.city_id,
-            region_id: this.region_id,
-            price_from: this.price_from,
-            price_to: this.price_to,
-            search_text: this.search_text,
-          },
-        })
+      HTTP.get("/adverts", {
+        params: {
+          page: page,
+          category_id: this.category_id,
+          city_id: this.city_id,
+          region_id: this.region_id,
+          price_from: this.price_from,
+          price_to: this.price_to,
+          search_text: this.search_text,
+        },
+      })
         .then((resp) => {
           console.log(resp.data);
           this.adverts = resp.data.data.data;

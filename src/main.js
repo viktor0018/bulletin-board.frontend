@@ -40,7 +40,7 @@ import "@agametov/vueditor/dist/style/vueditor.min.css";
 import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css";
 import "simple-line-icons/css/simple-line-icons.css";
 import "flag-icon-css/css/flag-icon.min.css";
-import "ionicons/dist/css/ionicons.min.css";
+//import "ionicons/dist/css/ionicons.min.css";
 import "vue-good-table/dist/vue-good-table.css";
 import "fullcalendar/dist/fullcalendar.css";
 import "vue-select/dist/vue-select.css";

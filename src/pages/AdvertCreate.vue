@@ -81,6 +81,9 @@
             <button class="btn btn-sm btn-white m-r-5" @click="cancel()">
               Back
             </button>
+            <button class="btn btn-sm btn-white m-r-5" @click="AddPhotos()">
+              Add photos
+            </button>
             <button class="btn btn-sm btn-white m-r-5" @click="createAdvert()">
               Create
             </button>
@@ -93,7 +96,7 @@
 
 <script>
 import PageOptions from "../config/PageOptions.vue";
-import HTTP from "../config/Http.js";
+import { HTTP } from "../config/Http.js";
 import { getList } from "../config/Library";
 import { show_error } from "../config/Message";
 
@@ -121,15 +124,35 @@ export default {
     next();
   },
   methods: {
-    createAdvert() {
-      HTTP()
-        .post("/advert/store", {
-          title: this.title,
-          description: this.description,
-          price: this.price,
-          category_id: this.category_id,
-          city_id: this.city_id,
+    AddPhotos() {
+      HTTP.post("/advert/store", {
+        title: this.title,
+        description: this.description,
+        price: this.price,
+        category_id: this.category_id,
+        city_id: this.city_id,
+      })
+        .then((resp) => {
+          console.log(resp.data);
+          console.log(resp.data.data.item.id);
+          this.$router.push({
+            name: "AdvertEdit",
+            params: { id: resp.data.data.item.id },
+          });
         })
+        .catch((error) => {
+          show_error(this.$notify, error);
+        })
+        .finally(() => {});
+    },
+    createAdvert() {
+      HTTP.post("/advert/store", {
+        title: this.title,
+        description: this.description,
+        price: this.price,
+        category_id: this.category_id,
+        city_id: this.city_id,
+      })
         .then((resp) => {
           console.log(resp.data);
         })
