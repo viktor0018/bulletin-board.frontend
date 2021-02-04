@@ -107,6 +107,28 @@
           </div>
         </div>
 
+        <div class="text-center">
+          <img
+            class="image"
+            v-for="(photo, i) in photos"
+            :src="photo"
+            :key="i"
+            @click="index = i"
+          />
+          <vue-gallery-slideshow
+            :images="photos"
+            :index="index"
+            @close="index = null"
+          ></vue-gallery-slideshow>
+        </div>
+
+        <vue-good-table
+          v-if="advert.moderation.length"
+          class="m-20"
+          :columns="columns"
+          :rows="advert.moderation"
+        />
+
         <div class="form-group row">
           <div class="col-md-7 offset-md-5">
             <button class="btn btn-sm btn-white m-r-5" @click="cancel()">
@@ -120,8 +142,9 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
-import { HTTP } from "../config/Http.js";
+import PageOptions from "/src/config/PageOptions.vue";
+import { HTTP } from "/src/config/Http.js";
+import { getPhotos } from "/src/config/Library";
 
 export default {
   data() {
@@ -132,6 +155,19 @@ export default {
       city: "",
       phone: "",
       phone_access_time: "",
+      photos: [],
+      index: null,
+      columns: [
+        {
+          label: "Date",
+          field: "moderated_at",
+        },
+        {
+          label: "Reason",
+          field: "reason",
+          width: "80%",
+        },
+      ],
     };
   },
 
@@ -139,7 +175,10 @@ export default {
   created() {
     console.log("created");
     this.id = this.$route.params.id;
-    this.getAdvert();
+    this.getAdvert(this.$data);
+    getPhotos(this.$data);
+
+    console.log("this.photos", this.photos);
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
@@ -179,5 +218,17 @@ export default {
 
 .pagination li {
   display: block;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-color: grey;
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 3px;
+  border: 1px solid lightgray;
+  object-fit: contain;
 }
 </style>

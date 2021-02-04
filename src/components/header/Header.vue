@@ -142,6 +142,26 @@
           <b-dropdown-item @click="$router.push({ path: '/home' })"
             >My adverts</b-dropdown-item
           >
+
+          <b-dropdown-item @click="$router.push({ path: '/moderate' })"
+            >Moderate</b-dropdown-item
+          >
+
+          <b-dropdown-item @click="$router.push({ name: 'RegionList' })"
+            >Region CRUID</b-dropdown-item
+          >
+
+          <b-dropdown-item @click="$router.push({ name: 'UserList' })"
+            >User CRUID</b-dropdown-item
+          >
+
+          <b-dropdown-item @click="$router.push({ name: 'CityList' })"
+            >City CRUID</b-dropdown-item
+          >
+
+          <b-dropdown-item @click="$router.push({ name: 'CategoryList' })"
+            >Category CRUID</b-dropdown-item
+          >
           <!--<b-dropdown-item href="javascript:;"
             ><span class="badge badge-danger pull-right">0</span>
             Inbox</b-dropdown-item

@@ -4,65 +4,19 @@
       <div class="row m-b-10">
         <div class="col-md-6 col-centered">
           <div>
-            <div class="form-group row m-b-15">
-              <label class="col-sm-3 col-form-label">Region</label>
-              <div class="col-sm-9">
-                <select
-                  v-model="region_id"
-                  name="city"
-                  id="city"
-                  class="form-control"
-                  tabindex="12"
-                >
-                  <option
-                    v-for="region in regions"
-                    :key="region.id"
-                    :value="region.id"
-                    >{{ region.name }}</option
-                  >
-                </select>
-              </div>
-            </div>
+            <city
+              :city_id="city_id"
+              :region_id="region_id"
+              @cityChange="(value) => (city_id = value)"
+              @regionChange="(value) => (region_id = value)"
+            >
+            </city>
 
-            <div class="form-group row m-b-15">
-              <label class="col-sm-3 col-form-label">City</label>
-              <div class="col-sm-9">
-                <select
-                  v-model="city_id"
-                  name="city"
-                  id="city"
-                  class="form-control"
-                  tabindex="12"
-                >
-                  <option
-                    v-for="city in cities"
-                    :key="city.id"
-                    :value="city.id"
-                    >{{ city.name }}</option
-                  >
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group row m-b-15">
-              <label class="col-sm-3 col-form-label">Category</label>
-              <div class="col-sm-9">
-                <select
-                  v-model="category_id"
-                  name="category"
-                  id="category"
-                  class="form-control"
-                  tabindex="12"
-                >
-                  <option
-                    v-for="category in categories"
-                    :key="category.id"
-                    :value="category.id"
-                    >{{ category.name }}</option
-                  >
-                </select>
-              </div>
-            </div>
+            <category
+              :category_id="category_id"
+              @categoryChange="(value) => (category_id = value)"
+            >
+            </category>
 
             <div class="form-group row m-b-15">
               <label class="col-sm-3 col-form-label">Price from</label>
@@ -146,7 +100,10 @@
         >
           <a class="media-left" :href="'/advert/' + advert.id">
             <img
-              :src="'https://picsum.photos/id/' + advert.id + '/200/200'"
+              :src="
+                'http://0.0.0.0/' +
+                  advert.photo.filter((x) => x.is_main == 1)[0].link
+              "
               alt=""
               class="media-object rounded"
             />
@@ -177,21 +134,17 @@
 import PageOptions from "../config/PageOptions.vue";
 import { HTTP } from "../config/Http.js";
 import { show_error } from "../config/Message";
-import { getList } from "../config/Library";
+
 
 export default {
   data() {
     return {
       value: "",
       adverts: [],
-      // Our data object that holds the Laravel paginator data
       advertData: {},
       category_id: 0,
-      categories: {},
       city_id: 0,
-      cities: {},
       region_id: 0,
-      regions: {},
       price_from: 0,
       price_to: 0,
       search_text: "",
@@ -201,8 +154,7 @@ export default {
   monted() {},
   created() {
     console.log("created");
-    getList(this.$data);
-
+    this.getCategories();
     this.category_id = localStorage.category_id;
     this.city_id = localStorage.city_id;
     this.region_id = localStorage.region_id;
@@ -217,14 +169,23 @@ export default {
     next();
   },
   methods: {
+    categoryChange(value) {
+      console.log(value);
+      this.category_id = value;
+    },
     resetAdverts() {
-      this.category_id = 0;
-      this.city_id = 0;
-      this.region_id = 0;
-      this.price_from = 0;
-      this.price_to = 0;
-      this.search_text = "";
-      this.searchAdverts();
+      this.$router.go();
+    },
+    getCategories() {
+      HTTP.get("/admin/category/index")
+        .then((resp) => {
+          console.log(resp.data);
+          this.categories = resp.data.data.items;
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {});
     },
     searchAdverts(page = 1) {
       localStorage.setItem("category_id", this.category_id);

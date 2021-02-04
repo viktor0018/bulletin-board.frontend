@@ -9,6 +9,7 @@
           :lineNumbers="false"
           :search-options="{
             enabled: true,
+
             placeholder: 'Search...',
           }"
           :paginationOptions="{
@@ -30,41 +31,45 @@
         >
           <div slot="emptystate">
             <div class="text-center">
-              No adverts...
+              No categories...
             </div>
           </div>
           <div slot="table-actions">
             <button
               class="btn  btn-info m-r-10"
               style="height:32px"
-              @click="advertCreate"
+              @click="categoryCreate"
             >
               <i class="fas fa-plus"></i>
-              Add advert
+              Add category
             </button>
           </div>
 
           <template slot="table-row" slot-scope="props">
-            <span v-if="props.column.field == 'id'">
-              <div>
+            <span v-if="props.column.field == 'idd'">
+              <div class="col-auto d-flex flex-column">
                 <button
-                  @click="advertShow(props.row)"
+                  @click="categoryShow(props.row)"
                   type="button"
-                  class="btn btn-default btn-sm m-r-10"
+                  class="btn btn-default btn-sm m-5"
+                  style="display:flex;width:80px"
                 >
                   Show
                 </button>
                 <button
-                  @click="advertEdit(props.row)"
+                  @click="categoryEdit(props.row)"
                   type="button"
-                  class="btn btn-default btn-sm m-r-10"
+                  class="btn btn-default btn-sm m-5"
+                  style="display:flex;width:80px"
                 >
                   Edit
                 </button>
+
                 <button
-                  @click="advertDelete(props.row)"
+                  @click="categoryDelete(props.row)"
                   type="button"
-                  class="btn btn-default btn-sm m-r-10"
+                  class="btn btn-default btn-sm m-5"
+                  style="display:flex;width:80px"
                 >
                   Delete
                 </button>
@@ -78,8 +83,8 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
-import { HTTP } from "../config/Http.js";
+import PageOptions from "/src/config/PageOptions.vue";
+import { HTTP } from "/src/config/Http.js";
 
 export default {
   data() {
@@ -88,24 +93,24 @@ export default {
       adverts: [],
       selectedRow: -1,
       // Our data object that holds the Laravel paginator data
-      advertData: {},
+      category: {},
 
       columns: [
         {
-          label: "Title",
-          field: "title",
+          label: "id",
+          field: "id",
         },
         {
-          label: "Description",
-          field: "description",
+          label: "Parent id",
+          field: "parent.name",
         },
         {
-          label: "Status",
-          field: "status.status",
+          label: "Name",
+          field: "name",
         },
         {
           label: "Action",
-          field: "id",
+          field: "idd",
           width: "40px",
           tdClass: "text-center text-nowrap",
           thClass: "text-center text-nowrap",
@@ -118,7 +123,7 @@ export default {
   monted() {},
   created() {
     console.log("created");
-    this.getAdverts();
+    this.getCategories();
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
@@ -132,19 +137,20 @@ export default {
         : "";
     },
 
-    advertShow(row) {
-      this.$router.push({ name: "AdvertShow", params: { id: row.id } });
+    categoryShow(row) {
+      console.log(row.id);
+      this.$router.push({ name: "CategoryShow", params: { id: row.id } });
     },
 
-    advertEdit(row) {
-      this.$router.push({ name: "AdvertEdit", params: { id: row.id } });
+    categoryEdit(row) {
+      this.$router.push({ name: "CategoryEdit", params: { id: row.id } });
     },
-    advertCreate() {
-      this.$router.push({ name: "AdvertCreate" });
+    categoryCreate() {
+      this.$router.push({ name: "CategoryCreate" });
     },
-    advertDelete(row) {
+    categoryDelete(row) {
       if (window.confirm("Are you sure?")) {
-        HTTP.post("/advert/destroy?id=" + row.id)
+        HTTP.post("/admin/category/destroy?", { id: row.id })
           .then((resp) => {
             console.log(resp.data);
             this.rows = this.rows.filter((r) => r.id != row.id);
@@ -157,11 +163,12 @@ export default {
     },
 
     addNew() {},
-    getAdverts() {
-      HTTP.get("/myadverts")
+    getCategories() {
+      HTTP.get("/admin/category/index")
         .then((resp) => {
           console.log(resp.data);
           this.rows = resp.data.data.items;
+          console.log(this.rows);
         })
         .catch((error) => {
           console.log(error);

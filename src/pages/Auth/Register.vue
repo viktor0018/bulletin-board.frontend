@@ -151,9 +151,9 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
-import { HTTP } from "../config/Http.js";
-import { show_error } from "../config/Message";
+import PageOptions from "/src/config/PageOptions.vue";
+import { HTTP } from "/src/config/Http.js";
+import { show_error } from "/src/config/Message";
 
 export default {
   data() {

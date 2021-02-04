@@ -1,38 +1,22 @@
 import { HTTP } from "./Http.js";
 
-function getList(data) {
-  HTTP.get("/advert/list")
+function getPhotos(data) {
+  HTTP.get("/photos", {
+    params: {
+      advert_id: data.id,
+    },
+  })
     .then((resp) => {
       console.log(resp.data);
-      data.categories = [
-        {
-          id: 0,
-          name: "Select category",
-          slug: "select_category",
-        },
-        ...resp.data.data.categories,
-      ];
-
-      data.cities = [
-        {
-          id: 0,
-          name: "Select city",
-          slug: "select_city",
-        },
-        ...resp.data.data.cities,
-      ];
-
-      data.regions = [
-        {
-          id: 0,
-          name: "Select region",
-          slug: "select_regions",
-        },
-        ...resp.data.data.cities,
-      ];
+      data.photo_arr = resp.data.data.items;
+      console.log("data.photos", data.photos);
+      data.photos = data.photo_arr.map((x) => "http://0.0.0.0/" + x.link);
+      console.log("data.photos", data.photos);
     })
-    .catch(() => {})
+    .catch((error) => {
+      console.log(error);
+    })
     .finally(() => {});
 }
 
-export { getList };
+export { getPhotos };

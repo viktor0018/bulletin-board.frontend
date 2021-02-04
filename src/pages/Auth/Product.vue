@@ -219,7 +219,7 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
+import PageOptions from "/src/config/PageOptions.vue";
 
 export default {
   data() {

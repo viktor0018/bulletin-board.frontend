@@ -9,11 +9,10 @@ function show_message(notify, text) {
 
 function show_error(notify, error) {
   const text =
-    error.message ||
     "<h4>" +
-      error.response.data.message +
-      "</h4>" +
-      Object.values(error.response.data.data.item.item).join("  ");
+    error.response.data.message +
+    "</h4>" +
+    Object.values(error.response.data.data.item.item).join("  ");
   notify({
     group: "bottom-right",
     title: "",

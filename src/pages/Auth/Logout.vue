@@ -1,7 +1,7 @@
 <template> <div></div></template>
 
 <script>
-import { HTTP } from "../config/Http.js";
+import { HTTP } from "/src/config/Http.js";
 export default {
   created() {
     HTTP.post("/logout", {})

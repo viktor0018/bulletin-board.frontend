@@ -27,42 +27,20 @@
           </div>
         </div>
 
-        <div class="form-group row m-b-15">
-          <label class="col-sm-3 col-form-label">Category</label>
-          <div class="col-sm-9">
-            <select
-              v-model="category_id"
-              name="category"
-              id="category"
-              class="form-control"
-              tabindex="12"
-            >
-              <option
-                v-for="category in categories"
-                :key="category.id"
-                :value="category.id"
-                >{{ category.name }}</option
-              >
-            </select>
-          </div>
-        </div>
+        <category
+          v-if="category_id != 0"
+          :category_id="category_id"
+          @categoryChange="(value) => (category_id = value)"
+        >
+        </category>
 
-        <div class="form-group row m-b-15">
-          <label class="col-sm-3 col-form-label">City</label>
-          <div class="col-sm-9">
-            <select
-              v-model="city_id"
-              name="city"
-              id="city"
-              class="form-control"
-              tabindex="12"
-            >
-              <option v-for="city in cities" :key="city.id" :value="city.id">{{
-                city.name
-              }}</option>
-            </select>
-          </div>
-        </div>
+        <city
+          :city_id="city_id"
+          :region_id="region_id"
+          @cityChange="(value) => (city_id = value)"
+          @regionChange="(value) => (region_id = value)"
+        >
+        </city>
 
         <div class="form-group row m-b-15">
           <label class="col-sm-3 col-form-label">Price</label>
@@ -82,14 +60,15 @@
           <div class="col-sm-9 text-center">
             <div
               style="width:100%"
-              v-for="photo in photos"
-              :key="photo.id"
+              v-for="(photo, i) in photo_arr"
+              :key="i"
               :value="photo.id"
             >
               <img
                 v-bind:src="'http://0.0.0.0/' + photo.link"
                 width="100"
                 class="m-10"
+                @click="index = i"
               />
               <span v-if="photo.is_main" class="m-r-10">
                 <b>Main photo</b>
@@ -110,6 +89,11 @@
             </div>
           </div>
         </div>
+        <vue-gallery-slideshow
+          :images="photos"
+          :index="index"
+          @close="index = null"
+        ></vue-gallery-slideshow>
 
         <div class="form-group row m-b-15">
           <label class="col-sm-3 col-form-label">Picture</label>
@@ -163,9 +147,10 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
-import { HTTP } from "../config/Http.js";
-import { getList } from "../config/Library";
+import PageOptions from "/src/config/PageOptions.vue";
+import { HTTP } from "/src/config/Http.js";
+import { getPhotos } from "/src/config/Library";
+import { show_error } from "/src/config/Message";
 
 export default {
   data() {
@@ -176,15 +161,16 @@ export default {
       price: 0,
       category_id: 0,
       city_id: 0,
-      cities: {},
-      categories: {},
+      region_id: 0,
+
       formFields: {
         picture: null,
       },
       imagePreview: null,
       showPreview: false,
-
-      photos: {},
+      photo_arr: {},
+      photos: [],
+      index: null,
     };
   },
 
@@ -192,10 +178,8 @@ export default {
   created() {
     console.log("created");
     this.id = this.$route.params.id;
-    getList(this.$data);
-
     this.getAdvert();
-    this.getPhotos();
+    getPhotos(this.$data);
   },
   beforeRouteLeave(to, from, next) {
     PageOptions.pageEmpty = false;
@@ -207,7 +191,7 @@ export default {
       HTTP.post("/photo/update", { id })
         .then((res) => {
           console.log(res);
-          this.getPhotos();
+          getPhotos(this.$data);
         })
         .catch((error) => {
           console.log(error);
@@ -218,7 +202,7 @@ export default {
         HTTP.post("/photo/delete", { id })
           .then((res) => {
             console.log(res);
-            this.getPhotos();
+            getPhotos(this.$data);
           })
           .catch((error) => {
             console.log(error);
@@ -283,10 +267,10 @@ export default {
         .then((res) => {
           console.log(res);
           this.cancelForm();
-          this.getPhotos();
+          getPhotos(this.$data);
         })
         .catch((error) => {
-          console.log(error);
+          show_error(this.$notify, error);
         });
     },
 
@@ -308,22 +292,6 @@ export default {
         .finally(() => {
           this.$router.push({ path: "/home" });
         });
-    },
-    getPhotos() {
-      HTTP.get("/photos", {
-        params: {
-          advert_id: this.id,
-        },
-      })
-        .then((resp) => {
-          console.log(resp.data);
-          this.photos = resp.data.data.items;
-          console.log(this.photos);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {});
     },
 
     getAdvert() {

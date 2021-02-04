@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import PageOptions from "../config/PageOptions.vue";
-import { HTTP } from "../config/Http.js";
-import { show_error, show_message } from "../config/Message";
+import PageOptions from "/src/config/PageOptions.vue";
+import { HTTP } from "/src/config/Http.js";
+import { show_error, show_message } from "/src/config/Message";
 
 export default {
   data() {

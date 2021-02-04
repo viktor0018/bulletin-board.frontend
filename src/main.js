@@ -30,6 +30,7 @@ import VueApexCharts from "vue-apexcharts";
 import DateRangePicker from "vue2-daterange-picker";
 import LaravelVuePagination from "laravel-vue-pagination";
 import VueGoodTablePlugin from "vue-good-table";
+import VueGallerySlideshow from "vue-gallery-slideshow";
 
 // plugins css
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -94,7 +95,8 @@ Vue.component("apexchart", VueApexCharts);
 Vue.component("date-range-picker", DateRangePicker);
 Vue.component(VueCountdown.name, VueCountdown);
 Vue.component("pagination", LaravelVuePagination);
-Vue.use(VueGoodTablePlugin);
+Vue.component(VueGoodTablePlugin);
+Vue.component("vue-gallery-slideshow", VueGallerySlideshow);
 
 const router = new VueRouter({
   routes,
