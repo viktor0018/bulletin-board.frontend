@@ -99,14 +99,7 @@
           style="min-width:400px"
         >
           <a class="media-left" :href="'/advert/' + advert.id">
-            <img
-              :src="
-                'http://0.0.0.0/' +
-                  advert.photo.filter((x) => x.is_main == 1)[0].link
-              "
-              alt=""
-              class="media-object rounded"
-            />
+            <img :src="advert.image" alt="" class="media-object rounded" />
           </a>
           <div class="media-body">
             <a :href="'/#/advert/' + advert.id">
@@ -134,7 +127,6 @@
 import PageOptions from "../config/PageOptions.vue";
 import { HTTP } from "../config/Http.js";
 import { show_error } from "../config/Message";
-
 
 export default {
   data() {
@@ -208,7 +200,17 @@ export default {
         .then((resp) => {
           console.log(resp.data);
           this.adverts = resp.data.data.data;
+
+          this.adverts.map((advert) => {
+            advert.image =
+              advert.photo.length != 0
+                ? "http://0.0.0.0/" +
+                  advert.photo.filter((x) => x.is_main == 1)[0]?.link
+                : "";
+          });
+
           this.advertData = resp.data.data;
+          console.log("this.adverts", this.advertData);
         })
         .catch((error) => {
           console.warn(error.response.data.data.item);

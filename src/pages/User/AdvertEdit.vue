@@ -35,6 +35,7 @@
         </category>
 
         <city
+          v-if="city_id != 0"
           :city_id="city_id"
           :region_id="region_id"
           @cityChange="(value) => (city_id = value)"
