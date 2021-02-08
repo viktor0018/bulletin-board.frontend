@@ -129,9 +129,24 @@
             </div>
           </div>
           <div class="register-buttons">
-            <button @click="register" class="btn btn-primary btn-block btn-lg">
+            <!--<button @click="register" class="btn btn-primary btn-block btn-lg">
               Sign Up
             </button>
+            -->
+
+            <div class="login-buttons mt-3">
+              <vue-recaptcha
+                :sitekey="sitekey"
+                ref="recaptcha"
+                size="invisible"
+                @verify="register"
+                @expired="onCaptchaExpired"
+              >
+                <button class="btn btn-primary btn-block btn-lg">
+                  Sign Up
+                </button>
+              </vue-recaptcha>
+            </div>
           </div>
           <div class="m-t-20 m-b-40 p-b-40 text-inverse">
             Already a member? Click
@@ -154,8 +169,10 @@
 import PageOptions from "/src/config/PageOptions.vue";
 import { HTTP } from "/src/config/Http.js";
 import { show_error } from "/src/config/Message";
+import VueRecaptcha from "vue-recaptcha";
 
 export default {
+  components: { VueRecaptcha },
   data() {
     return {
       name: "",
@@ -165,6 +182,7 @@ export default {
       password: "",
       phone: "",
       phone_access_time: "",
+      sitekey: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
     };
   },
 
@@ -178,7 +196,11 @@ export default {
     next();
   },
   methods: {
-    register() {
+    onCaptchaExpired() {
+      this.$refs.recaptcha.reset();
+    },
+
+    register(recaptchaToken) {
       this.$insProgress.start();
       this.loading = true;
       localStorage.setItem("username", this.username);
@@ -191,6 +213,7 @@ export default {
         password: this.password,
         phone: this.phone,
         phone_access_time: this.phone_access_time,
+        recaptcha_token: recaptchaToken,
       })
         .then((resp) => {
           console.log("resp", resp);
